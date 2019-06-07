@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.abhi.weatherapp">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <application
             android:allowBackup="true"
@@ -10,9 +11,9 @@
             android:roundIcon="@mipmap/logoico"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".WeatherActivity">
+        <activity android:name=".view.activity.WeatherActivity">
         </activity>
-        <activity android:name=".SplashActivity"
+        <activity android:name=".view.activity.SplashActivity"
         android:theme="@style/FullScrTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
