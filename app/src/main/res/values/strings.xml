@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WeatherApp</string>
+    <string name="permission_read_phone_state_rationale">permission_read_phone_state_rationale</string>
 </resources>
