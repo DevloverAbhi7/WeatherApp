@@ -2,7 +2,7 @@ package com.abhi.weatherapp.utils;
 
 public class Constants
 {
-    static String key ="5c9662ec07b14d2aafe125742190706";
-    static String url = "http://api.apixu.com/v1/current.json?key=" +key+ "&q=";
+   public static String key ="88208720490de85931ed5779825ceb67";
+    public static String BASEURL = "https://api.openweathermap.org";
 
 }

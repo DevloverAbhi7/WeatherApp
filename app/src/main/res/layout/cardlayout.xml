@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+
+              >
+    <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_view"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            card_view:cardCornerRadius="4dp"
+            android:layout_margin="20dp">
+        <ImageView
+                android:id="@+id/tempimg"
+                android:layout_width="80dp"
+           android:layout_height="80dp"
+           android:layout_gravity="left|center"
+           android:layout_marginLeft="30dp"
+           android:src="@mipmap/ic_launcher"/>
+
+        <TextView android:id="@+id/tempdegree"
+                android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="temperature"
+                  android:layout_gravity="right|center"
+
+                  android:layout_marginRight="50dp"
+        />
+
+        <TextView android:id="@+id/tempcity"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="city"
+                  android:layout_gravity="right|center"
+                  android:layout_marginTop="30dp"
+                  android:layout_marginRight="50dp"
+        />
+
+    </android.support.v7.widget.CardView>
+
+
+
+</LinearLayout>

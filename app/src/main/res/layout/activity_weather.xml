@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         tools:context=".view.activity.WeatherActivity">
 
-    <android.support.design.widget.TextInputLayout
+    <LinearLayout
             android:id="@+id/userview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -15,10 +15,11 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="50dp"
-            android:layout_marginBottom="60dp">
+            android:layout_marginBottom="20dp"
+    android:orientation="vertical">
 
         <EditText
-                android:id="@+id/input_user"
+                android:id="@+id/input_city"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Enter City Name"
@@ -26,7 +27,13 @@
                 android:maxLength="10"
                 android:textSize="25sp"
         />
-    </android.support.design.widget.TextInputLayout>
+        <ListView
+                android:id="@+id/search_results"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:visibility="gone"/>
+    </LinearLayout>
 
     <TextView android:id="@+id/temp"
               android:layout_below="@+id/userview"
@@ -36,11 +43,19 @@
               android:layout_centerVertical="true"
               android:text="0.0 C"
               android:textSize="75sp"
-              android:layout_marginBottom="50dp"
+              android:layout_marginBottom="20dp"
     />
+    <TextView android:id="@+id/city"
+    android:layout_below="@id/temp"
+    android:layout_centerHorizontal="true"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:text="cityname"
+    android:textSize="25sp">
+    </TextView>
     <android.support.v7.widget.RecyclerView
             android:id="@+id/history"
-            android:layout_below="@id/temp"
+            android:layout_below="@id/city"
             android:layout_width="match_parent"
             android:layout_height="400dp">
 
