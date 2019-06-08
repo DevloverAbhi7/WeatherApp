@@ -11,16 +11,12 @@ public class WeatherHistoryDto
     String Temperature;
     String CityName;
 
-    public WeatherHistoryDto()
-    {
-
-    }
-
     public WeatherHistoryDto(String temperature, String cityName) {
         Temperature = temperature;
         CityName = cityName;
     }
 
+    public  WeatherHistoryDto(){}
     public String getTemperature() {
         return Temperature;
     }

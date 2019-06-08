@@ -7,8 +7,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import com.abhi.weatherapp.R;
+import com.abhi.weatherapp.app.App;
+import com.abhi.weatherapp.app.ObjectBox;
 import com.abhi.weatherapp.model.CitiesData;
 import com.abhi.weatherapp.model.Example;
+import com.abhi.weatherapp.model.db.WeatherHistoryDto;
 import com.abhi.weatherapp.network.NetworkClient;
 import com.abhi.weatherapp.network.WeatherAPIs;
 import com.abhi.weatherapp.utils.Constants;
@@ -16,6 +19,8 @@ import com.jakewharton.rxbinding2.widget.RxTextView;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 
+import io.objectbox.Box;
+import io.objectbox.BoxStore;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,21 +29,28 @@ import retrofit2.Retrofit;
 
 public class WeatherActivity extends AppCompatActivity
 {
+    WeatherHistoryDto weatherdto;
     EditText inputcity;
     ListView citylist;
     TextView temperature;
     TextView cityname;
     ArrayAdapter<String> arrayAdapter;
+    String temper;
+    String citydata;
+    Box<WeatherHistoryDto> boxy;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+       // boxy= ObjectBox.get().boxFor(WeatherHistoryDto.class);
         initializr();
     }
 
    public void initializr()
-   {
+   {   /* BoxStore boxStore = App.getApp().getBoxStore();*/
+       /*Box<WeatherHistoryDto> animalBox = boxStore.boxFor(WeatherHistoryDto.class);*/
+       /*animalBox.put(new WeatherHistoryDto("rer","hguy"));*/
        inputcity = (EditText) findViewById(R.id.input_city);
        cityname =(TextView) findViewById(R.id.city);
        citylist = findViewById(R.id.search_results);
@@ -78,6 +90,7 @@ public class WeatherActivity extends AppCompatActivity
                 fetchWeatherDetails(arrayAdapter.getItem(position).toString());
                 cityname.setText(arrayAdapter.getItem(position).toString());
                 inputcity.setText(arrayAdapter.getItem(position).toString());
+                temperature.setText(temper);
                 clearSearchResults();
             }
         });
@@ -85,11 +98,10 @@ public class WeatherActivity extends AppCompatActivity
     }
 
     private void fetchWeatherDetails(String cityname) {
-
+            citydata = cityname;
         Retrofit retrofit = NetworkClient.getRetrofitClient();
         WeatherAPIs weatherAPIs = retrofit.create(WeatherAPIs.class);
         Call<Example> call = weatherAPIs.getWeatherByCity(Constants.key, cityname);
-
         call.enqueue(cb);
     }
                 Callback<Example> cb = new Callback()
@@ -102,7 +114,7 @@ public class WeatherActivity extends AppCompatActivity
         if (response.body() != null) {
             Example current = (Example) response.body();
 
-            temperature.setText(Double.toString((current.getMain().getTemp()-273.15))+" C");
+           temper= Double.toString((current.getMain().getTemp()-273.15))+" C";
         }
     }
     @Override
