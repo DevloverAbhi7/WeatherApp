@@ -3,6 +3,7 @@ package com.abhi.weatherapp.utils;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import com.abhi.weatherapp.model.db.WeatherHistoryDto;
 import com.abhi.weatherapp.view.adapter.WeatherHistoryAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -13,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,8 +42,10 @@ public class GeneralMethods
                 });
     }
 
-    public static void update2db(FirebaseFirestore db)
+    public static ArrayList<WeatherHistoryDto>  update2db(FirebaseFirestore db)
     {
+
+        ArrayList<WeatherHistoryDto> weatherdto = new ArrayList<WeatherHistoryDto>();
         db.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -49,6 +53,7 @@ public class GeneralMethods
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                weatherdto.add(new WeatherHistoryDto(document.getData().get("temperature").toString(),document.getData().get("city").toString()));
                                 Log.d("update2db", document.getId() + " => " + document.getData().get("city"));
                             }
                         } else {
@@ -56,5 +61,7 @@ public class GeneralMethods
                         }
                     }
                 });
+
+        return weatherdto;
     }
 }

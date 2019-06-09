@@ -79,13 +79,14 @@ public class WeatherActivity extends AppCompatActivity
        recycle = findViewById(R.id.history);
        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
        recycle.setLayoutManager(linearLayoutManager);
+       weatheradapter = new WeatherHistoryAdapter(this,GeneralMethods.update2db(db));
+       recycle.setAdapter(weatheradapter);
        RxTextView.textChanges(inputcity)
                .doOnNext(text -> this.clearSearchResults())
                .filter(text -> text.length() >= 3)
                .debounce(500, TimeUnit.MILLISECONDS)
                .observeOn(AndroidSchedulers.mainThread())
                .subscribe(this::updateSearchResults);
-       GeneralMethods.update2db(db);
    }
 
     private void clearSearchResults() {

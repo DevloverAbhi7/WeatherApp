@@ -3,6 +3,8 @@ package com.abhi.weatherapp.model.db;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
+import java.util.ArrayList;
+
 @Entity
 public class WeatherHistoryDto
 {
@@ -10,7 +12,6 @@ public class WeatherHistoryDto
     long id;
     String Temperature;
     String CityName;
-
     public WeatherHistoryDto(String temperature, String cityName) {
         Temperature = temperature;
         CityName = cityName;
