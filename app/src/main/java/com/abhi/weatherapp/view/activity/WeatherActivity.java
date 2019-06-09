@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
@@ -16,6 +18,8 @@ import com.abhi.weatherapp.model.db.WeatherHistoryDto;
 import com.abhi.weatherapp.network.NetworkClient;
 import com.abhi.weatherapp.network.WeatherAPIs;
 import com.abhi.weatherapp.utils.Constants;
+import com.abhi.weatherapp.utils.GeneralMethods;
+import com.abhi.weatherapp.view.adapter.WeatherHistoryAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +43,8 @@ import retrofit2.Retrofit;
 
 public class WeatherActivity extends AppCompatActivity
 {
+    RecyclerView recycle;
+    WeatherHistoryAdapter weatheradapter;
     EditText inputcity;
     ListView citylist;
     TextView temperature;
@@ -70,12 +76,16 @@ public class WeatherActivity extends AppCompatActivity
        temperature =findViewById(R.id.temp);
        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
        citylist.setAdapter(arrayAdapter);
+       recycle = findViewById(R.id.history);
+       LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+       recycle.setLayoutManager(linearLayoutManager);
        RxTextView.textChanges(inputcity)
                .doOnNext(text -> this.clearSearchResults())
                .filter(text -> text.length() >= 3)
                .debounce(500, TimeUnit.MILLISECONDS)
                .observeOn(AndroidSchedulers.mainThread())
                .subscribe(this::updateSearchResults);
+       GeneralMethods.update2db(db);
    }
 
     private void clearSearchResults() {
@@ -104,7 +114,7 @@ public class WeatherActivity extends AppCompatActivity
                 cityname.setText(city);
                 inputcity.setText(city);
                 temperature.setText(temper);
-                addtodb(city,temper,db);
+                GeneralMethods.addtodb(city,temper,db);
                 clearSearchResults();
             }
         });
@@ -137,25 +147,5 @@ public class WeatherActivity extends AppCompatActivity
     }
 };
 
-   public void addtodb(String city,String temperature,FirebaseFirestore dbdata)
-   {
-       Map<String, Object> user = new HashMap<>();
-       user.put("city", city);
-       user.put("temperature", temperature);
 
-       db.collection("users")
-               .add(user)
-               .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                   @Override
-                   public void onSuccess(DocumentReference documentReference) {
-                       Log.d("addtodb", "DocumentSnapshot added with ID: " + documentReference.getId());
-                   }
-               })
-               .addOnFailureListener(new OnFailureListener() {
-                   @Override
-                   public void onFailure(@NonNull Exception e) {
-                       Log.w("addtodb", "Error adding document", e);
-                   }
-               });
-   }
 }
