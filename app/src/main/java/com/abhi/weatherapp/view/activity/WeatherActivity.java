@@ -1,6 +1,7 @@
 package com.abhi.weatherapp.view.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,7 +16,16 @@ import com.abhi.weatherapp.model.db.WeatherHistoryDto;
 import com.abhi.weatherapp.network.NetworkClient;
 import com.abhi.weatherapp.network.WeatherAPIs;
 import com.abhi.weatherapp.utils.Constants;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.jakewharton.rxbinding2.widget.RxTextView;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 
@@ -29,15 +39,16 @@ import retrofit2.Retrofit;
 
 public class WeatherActivity extends AppCompatActivity
 {
-    WeatherHistoryDto weatherdto;
     EditText inputcity;
     ListView citylist;
     TextView temperature;
     TextView cityname;
+    FirebaseFirestore db;
     ArrayAdapter<String> arrayAdapter;
     String temper;
     String citydata;
-    Box<WeatherHistoryDto> boxy;
+    /*Box<WeatherHistoryDto> boxy;*/
+    WeatherHistoryDto weatherhistorydata;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
@@ -51,6 +62,8 @@ public class WeatherActivity extends AppCompatActivity
    {   /* BoxStore boxStore = App.getApp().getBoxStore();*/
        /*Box<WeatherHistoryDto> animalBox = boxStore.boxFor(WeatherHistoryDto.class);*/
        /*animalBox.put(new WeatherHistoryDto("rer","hguy"));*/
+       weatherhistorydata = new WeatherHistoryDto();
+       db = FirebaseFirestore.getInstance();
        inputcity = (EditText) findViewById(R.id.input_city);
        cityname =(TextView) findViewById(R.id.city);
        citylist = findViewById(R.id.search_results);
@@ -86,11 +99,12 @@ public class WeatherActivity extends AppCompatActivity
         citylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                fetchWeatherDetails(arrayAdapter.getItem(position).toString());
-                cityname.setText(arrayAdapter.getItem(position).toString());
-                inputcity.setText(arrayAdapter.getItem(position).toString());
+            {   String city= arrayAdapter.getItem(position).toString();
+                fetchWeatherDetails(city);
+                cityname.setText(city);
+                inputcity.setText(city);
                 temperature.setText(temper);
+                addtodb(city,temper,db);
                 clearSearchResults();
             }
         });
@@ -122,4 +136,26 @@ public class WeatherActivity extends AppCompatActivity
         Log.w("MyTag", "requestFailed", t);
     }
 };
+
+   public void addtodb(String city,String temperature,FirebaseFirestore dbdata)
+   {
+       Map<String, Object> user = new HashMap<>();
+       user.put("city", city);
+       user.put("temperature", temperature);
+
+       db.collection("users")
+               .add(user)
+               .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                   @Override
+                   public void onSuccess(DocumentReference documentReference) {
+                       Log.d("addtodb", "DocumentSnapshot added with ID: " + documentReference.getId());
+                   }
+               })
+               .addOnFailureListener(new OnFailureListener() {
+                   @Override
+                   public void onFailure(@NonNull Exception e) {
+                       Log.w("addtodb", "Error adding document", e);
+                   }
+               });
+   }
 }
